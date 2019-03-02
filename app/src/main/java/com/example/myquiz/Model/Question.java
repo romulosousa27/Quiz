@@ -31,7 +31,7 @@ public class Question {
      *
      * @return
      */
-    public double getAnserCorrect(){
+    public double getAnswerCorrect(){
         return answerCorrect;
     }
 
