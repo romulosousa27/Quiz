@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">My Quiz</string>
+    <string name="next_question">Proxima Pergunta</string>
 </resources>

@@ -13,8 +13,13 @@ import com.example.myquiz.Model.Question;
 import com.example.myquiz.Model.QuestionRepository;
 import com.example.myquiz.R;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
+    private final Locale locale = new Locale("pt", "BR");
     private QuestionRepository repository = new QuestionRepository();
     private int indice_question = 0;
     private TextView textViewQuestion;
@@ -45,11 +50,19 @@ public class MainActivity extends AppCompatActivity {
 
                 String mensagem;
 
-                if (analystQuest.isAnswearCorrect(question, Double.valueOf(answer))) {
-                    mensagem = "Parabens, resposta correta";
-                } else {
-                    mensagem = "Resposta Errada";
+                try{
+                    NumberFormat format = NumberFormat.getCurrencyInstance(locale);
+                    Number number = format.parse(answer);
+
+                    if (analystQuest.isAnswearCorrect(question, number.doubleValue())) {
+                        mensagem = "Parabens, resposta correta";
+                    } else {
+                        mensagem = "Resposta Errada";
+                    }
+                } catch (ParseException e){
+                    mensagem = e.getMessage();
                 }
+
                 Toast.makeText(MainActivity.this, mensagem, Toast.LENGTH_SHORT).show();
             }
         };
@@ -70,17 +83,26 @@ public class MainActivity extends AppCompatActivity {
                 if (indice_question >= repository.getListQuestion().size()) {
                     indice_question = 0;
                 }
-                
-                Question question = repository.getListQuestion().get(indice_question);
 
-                textViewQuestion.setText(question.getText());
-                buttonAnswer1.setText(String.valueOf(question.getAnswerCorrect()));
-                buttonAnswer2.setText(String.valueOf(question.getAnswerIncorrect()));
+                showQuestion(indice_question);
             }
         };
 
         Button nextQuestion = findViewById(R.id.nextQuestion);
-        nextQuestion.setText("Proxima Pergunta");
         nextQuestion.setOnClickListener(listenerNextQuestion);
+
+        showQuestion(indice_question);
+    }
+
+    public void showQuestion(final int indice_question) {
+        Question question = repository.getListQuestion().get(indice_question);
+
+        textViewQuestion.setText(question.getText());
+
+        String answerCorrect = String.format(locale,"%.2f", question.getAnswerCorrect());
+        String answerIncorrect = String.format(locale, "%.2f",question.getAnswerIncorrect());
+
+        buttonAnswer1.setText(answerCorrect);
+        buttonAnswer2.setText(answerIncorrect);
     }
 }
