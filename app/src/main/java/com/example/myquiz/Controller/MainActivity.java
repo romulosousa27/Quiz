@@ -30,5 +30,7 @@ public class MainActivity extends AppCompatActivity {
         Button buttonAnswer2 = findViewById(R.id.button4);
         buttonAnswer2.setText(String.valueOf(question.getAnswerIncorrect()));
 
+        Button nextQuestion = findViewById(R.id.nextQuestion);
+        nextQuestion.setText("Proxima Pergunta");
     }
 }
