@@ -1,6 +1,7 @@
 package com.example.myquiz.Controller;
 
 import android.net.sip.SipSession;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +20,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String INDICE_QUESTION = "INDICE_QUESTION";
     private final Locale locale = new Locale("pt", "BR");
     private QuestionRepository repository = new QuestionRepository();
     private int indice_question = 0;
@@ -50,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
                 String mensagem;
 
-                try{
-                    NumberFormat format = NumberFormat.getCurrencyInstance(locale);
+                try {
+                    NumberFormat format = NumberFormat.getInstance(locale);
                     Number number = format.parse(answer);
 
                     if (analystQuest.isAnswearCorrect(question, number.doubleValue())) {
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         mensagem = "Resposta Errada";
                     }
-                } catch (ParseException e){
+                } catch (ParseException e) {
                     mensagem = e.getMessage();
                 }
 
@@ -91,7 +93,18 @@ public class MainActivity extends AppCompatActivity {
         Button nextQuestion = findViewById(R.id.nextQuestion);
         nextQuestion.setOnClickListener(listenerNextQuestion);
 
+        if (savedInstanceState != null) {
+            indice_question = savedInstanceState.getInt(INDICE_QUESTION);
+        }
+
         showQuestion(indice_question);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(INDICE_QUESTION, indice_question);
     }
 
     public void showQuestion(final int indice_question) {
@@ -99,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
 
         textViewQuestion.setText(question.getText());
 
-        String answerCorrect = String.format(locale,"%.2f", question.getAnswerCorrect());
-        String answerIncorrect = String.format(locale, "%.2f",question.getAnswerIncorrect());
+        String answerCorrect = String.format(locale, "%.2f", question.getAnswerCorrect());
+        String answerIncorrect = String.format(locale, "%.2f", question.getAnswerIncorrect());
 
         buttonAnswer1.setText(answerCorrect);
         buttonAnswer2.setText(answerIncorrect);
