@@ -38,17 +38,16 @@ public class MainActivity extends AppCompatActivity {
         final View.OnClickListener listenerButtonAnswer = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String answer = ((Button)v).getText().toString();
+                final String answer = ((Button) v).getText().toString();
 
                 AnalystQuest analystQuest = new AnalystQuest();
                 Question question = repository.getListQuestion().get(indice_question);
 
                 String mensagem;
 
-                if (analystQuest.isAnswearCorrect(question, Double.valueOf(answer) )) {
+                if (analystQuest.isAnswearCorrect(question, Double.valueOf(answer))) {
                     mensagem = "Parabens, resposta correta";
-                }
-                else {
+                } else {
                     mensagem = "Resposta Errada";
                 }
                 Toast.makeText(MainActivity.this, mensagem, Toast.LENGTH_SHORT).show();
@@ -66,8 +65,12 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener listenerNextQuestion = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                indice_question ++;
+                indice_question++;
 
+                if (indice_question >= repository.getListQuestion().size()) {
+                    indice_question = 0;
+                }
+                
                 Question question = repository.getListQuestion().get(indice_question);
 
                 textViewQuestion.setText(question.getText());
